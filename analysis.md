@@ -66,9 +66,43 @@ This box plot shows the price change distribution for Positive, Mixed, and Negat
 
 ![Distribution of Price Change by Event Type](images/result_type_distribution.png)
 
+We conducted additional analyses to determine whether certain factors, such as **Phase**, **Combination vs. Monotherapy**, or **Regulatory Action Types**, could help explain the observed trends in positive and negative market reactions. 
+
+### Key Findings:
+1. **Phase and Combination vs. Monotherapy**:  
+   We observed no significant difference in the ratio of positive to negative results when comparing clinical trial phases (e.g., Phase 1, 2, or 3) or whether the treatment was a combination therapy or monotherapy. These factors did not appear to strongly influence the likelihood of positive or negative market reactions.
+
+2. **Market Cap**:  
+   Small-cap stocks were more likely to have negative responses to news overall, with a **positive-to-negative ratio of 0.80**, indicating that negative reactions outweighed positive ones. In contrast, mid-cap and large-cap stocks had ratios of **1.26** and **1.19**, respectively, suggesting that larger companies tend to experience more favorable market reactions.
+
+3. **Timing of Press Releases**:  
+   Press releases indicating **future events** (e.g., "Company X to announce Phase 2 results at AACR next Fall") had a **positive-to-negative ratio of 1.21**, compared to a ratio of **1.07** for press releases focused on **present events**. This suggests that forward-looking announcements may generate slightly more positive market sentiment.
+
+4. **Regulatory Action Types**:  
+   We also examined the regulatory action types associated with positive results to see if any patterns emerged. The table below summarizes the results:
+
+**Table 4. Statistical Summary of Returns by Regulatory Action Type**  
+This table highlights the mean, median, and standard deviation of returns, along with the count of positive and negative outcomes and their ratio, for each regulatory action type. Notable findings include:
+- **Emergency Use Authorization (EUA)** had the highest positive-to-negative ratio (1.50), suggesting strong market optimism for these announcements.
+- **Supplemental New Drug Applications (sNDA)** and **Fast Track, Orphan, or Priority Review Designations** also showed relatively high ratios of 1.36 and 1.24, respectively.
+- **New Drug Applications (NDA)** had a ratio of 1.13, indicating a more balanced market reaction.
+- **Label Expansions** and **Investigational New Drug (IND) Applications** had ratios close to or below 1, suggesting more neutral or mixed market responses.
+
+| Regulatory Action Type                                           | Mean Return | Median Return | Std Dev  | 25th Percentile | 75th Percentile | Count | Positive Count | Negative Count | Positive-to-Negative Ratio |
+|------------------------------------------------------------------|-------------|---------------|----------|-----------------|-----------------|-------|----------------|----------------|----------------------------|
+| Emergency Use Authorization (EUA)                               | 0.006542    | 0.014666      | 0.067890 | -0.043302       | 0.022153        | 25    | 15             | 10             | 1.500000                   |
+| Supplemental New Drug Application (sNDA)                        | 0.015016    | 0.004358      | 0.113649 | -0.015091       | 0.017297        | 78    | 45             | 33             | 1.363636                   |
+| Fast Track, Orphan, Priority Review, or Similar Designation      | 0.009712    | 0.003294      | 0.120511 | -0.024407       | 0.031427        | 94    | 52             | 42             | 1.238095                   |
+| New Drug Application (NDA)                                      | 0.054944    | 0.002381      | 0.336181 | -0.017525       | 0.028092        | 331   | 176            | 155            | 1.135484                   |
+| Label Expansion                                                 | -0.006008   | 0.001462      | 0.065487 | -0.011474       | 0.021141        | 41    | 21             | 20             | 1.050000                   |
+| Investigational New Drug (IND) Application                      | 0.015153    | -0.001144     | 0.110596 | -0.050600       | 0.063692        | 24    | 12             | 12             | 1.000000                   |
+| Biologics License Application (BLA)                             | 0.009459    | 0.001439      | 0.085916 | -0.020792       | 0.020627        | 22    | 11             | 11             | 1.000000                   |
+| Regulatory Opinion Only                                         | 0.020800    | -0.001306     | 0.192951 | -0.020213       | 0.015773        | 93    | 45             | 48             | 0.937500                   |
+
+These findings suggest that while certain regulatory action types, such as EUA and sNDA, tend to generate more positive market reactions, the overall trends remain nuanced. Factors such as market cap, timing of announcements, and the specific regulatory context all contribute to the complexity of interpreting market responses to press releases.
 
 
-### Exploring Heuristic Trading Rules Based on Event Trends
+## Exploring Heuristic Trading Rules Based on Event Trends
 
 One of the ideas explored in this project was to identify potential trends in stock price movements following specific types of press releases. The goal was to determine whether heuristic rules could be developed to capitalize on these trends. For example: Do **Positive Results** that lead to a 5%+ drop in price on Day 1 tend to recover and show price increases over the next 30 days?
 
@@ -78,6 +112,7 @@ To test these ideas, I simulated various trading strategies based on heuristic r
 This figure compares the performance of different heuristic trading strategies such as going long on positive results with Day 1 price increases, while also demonstrating the risks of other strategies, such as going long on positive results with Day 1 price drops.
 
 ![Comparing Heuristic Trading Strategies](images/comparing_heuristic_strategies.png)
+
 
 
 
