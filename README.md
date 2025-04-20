@@ -6,11 +6,6 @@
 
 This project explores whether biotech press releases—such as clinical trial updates or regulatory decisions—can provide insights into stock price behavior. By leveraging large language models (LLMs) for feature extraction and annotation, combined with machine learning and event-based backtesting, the goal is to uncover patterns in market reactions that can inform trading strategies and help predict stock movements.
 
-## Introduction
-Having worked in biotech for several years, I have often been puzzled by the seemingly counterintuitive market reactions to clinical trial results and FDA decisions. Positive trial outcomes would sometimes lead to stock price drops, while negative news occasionally resulted in gains. This paradox sparked my curiosity to explore whether there were underlying patterns driving these reactions. 
-
-In the past, investigating this phenomenon would be extremely difficult due to the time and effort required to manually download and annotate press releases. Advances in large language models (LLMs) have made this process much more efficient, enabling automated parsing, feature extraction, and annotation. This has allowed for a structured and scalable analysis of market reactions, uncovering patterns that could inform trading strategies.
-
 ## Repository Contents
 
 - **analysis**: This directory contains Jupyter notebooks and Python scripts used for data analysis, machine learning modeling, and event-based backtesting. These tools are designed to uncover patterns in market reactions and evaluate the effectiveness of potential trading strategies.
@@ -22,6 +17,12 @@ In the past, investigating this phenomenon would be extremely difficult due to t
   - **prompts**: Contains templates and configurations for large language models (LLMs) used to extract and annotate features from the press releases, enabling automated and scalable data processing.
 
 - **images**: This folder contains visual assets, including the project banner, charts, and figures used in the documentation or analysis to illustrate key findings and insights.
+
+## Introduction
+Having worked in biotech for several years, I have often been puzzled by the seemingly counterintuitive market reactions to clinical trial results and FDA decisions. Positive trial outcomes would sometimes lead to stock price drops, while negative news occasionally resulted in gains. This paradox sparked my curiosity to explore whether there were underlying patterns driving these reactions. 
+
+In the past, investigating this phenomenon would be extremely difficult due to the time and effort required to manually download and annotate press releases. Advances in large language models (LLMs) have made this process much more efficient, enabling automated parsing, feature extraction, and annotation. This has allowed for a structured and scalable analysis of market reactions, uncovering patterns that could inform trading strategies.
+
 
 ## Data
 We analyzed approximately 30,000 press releases from around 100 biotechnology and pharmaceutical companies, spanning the years 2014 to 2025. These press releases were manually collected from each company's website as raw HTML files and then processed using the scripts provided in the `data/data_processing_scripts/` directory. Stock price data corresponding to these press releases was downloaded using the `yfinance` library, enabling us to link market reactions to specific events.
