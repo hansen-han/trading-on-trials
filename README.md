@@ -8,7 +8,7 @@ This project explores whether biotech press releases—such as clinical trial up
 
 ## Repository Contents
 
-- **analysis**: This directory contains Jupyter notebooks and Python scripts used for data analysis, machine learning modeling, and event-based backtesting. These tools are designed to uncover patterns in market reactions and evaluate the effectiveness of potential trading strategies.
+- **scripts**: This directory contains Jupyter notebooks and Python scripts used for data analysis, machine learning modeling, and event-based backtesting. These tools are designed to uncover patterns in market reactions and evaluate the effectiveness of potential trading strategies.
 
 - **data**: Includes all the resources and scripts necessary for processing and analyzing press releases and stock price data.
   - **data_processing_scripts**: A collection of Python scripts for parsing raw press releases, extracting key features (e.g., publication date, classifications, and drug details), and linking them with corresponding stock price data.
