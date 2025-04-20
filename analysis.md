@@ -68,13 +68,18 @@ This box plot shows the price change distribution for Positive, Mixed, and Negat
 
 
 
-## Exploring Heuristic Trading Rules Based on Event Trends
+### Exploring Heuristic Trading Rules Based on Event Trends
 
 One of the ideas explored in this project was to identify potential trends in stock price movements following specific types of press releases. The goal was to determine whether heuristic rules could be developed to capitalize on these trends. For example:
 - Do **Positive Results** that lead to a 5%+ drop in price on Day 1 tend to recover and show price increases over the next 30 days?
 - Do **Negative Results** with a 5%+ drop on Day 1 continue to decline over the next 30 days?
 
+To test these ideas, we simulated various trading strategies based on heuristic rules and compared their performance to a control portfolio (S&P 500). The chart below illustrates the cumulative portfolio balance for each strategy over time.
 
+**Figure 2. Portfolio Performance of Heuristic Trading Strategies**  
+This figure compares the performance of different heuristic trading strategies such as going long on positive results with Day 1 price increases, while also demonstrating the risks of other strategies, such as going long on positive results with Day 1 price drops.
+
+![Comparing Heuristic Trading Strategies](images/comparing_heuristic_strategies.png)
 
 
 
