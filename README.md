@@ -55,8 +55,6 @@ The table below summarizes the standard deviation (volatility) of stock price ch
 | Other                                                  | 0.07156 | 0.006649    | 0.000593      | -0.681751  | 0.979390   | -0.016893       | 0.021230        | 3017  |
 | Company to Attend Conference                           | 0.07032 | 0.005604    | 0.001650      | -0.656182  | 1.171123   | -0.025438       | 0.029169        | 4777  |
 | Legal Dispute                                          | 0.06202 | 0.017984    | 0.007050      | -0.065337  | 0.315043   | -0.007444       | 0.020771        | 90    |
-| Change in Executive Management or Board of Directors   | 0.05851 | 0.000976    | -0.000739     | -0.104140  | 0.200942   | -0.042046       | 0.029190        | 61    |
-
 
 - **Press Related to Stock Offerings** and **Clinical Trial Updates** exhibit the highest volatility, with standard deviations of 0.16331 and 0.14796, respectively.
 - **Quarterly or Annual Financial Updates** and **Partnership Announcements** show moderate volatility, reflecting their routine but impactful nature.
