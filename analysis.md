@@ -1,124 +1,231 @@
-# Introduction
-Having worked in biotech for several years, I have often been puzzled by the seemingly counterintuitive market reactions to clinical trial results and FDA decisions. Positive trial outcomes would sometimes lead to stock price drops, while negative news occasionally resulted in gains. This paradox sparked my curiosity to explore whether there were underlying patterns driving these reactions. 
+<p align="center">
+  <img src="images/banner.png" alt="Trading on Trials Banner" width="100%" />
+</p>
 
-In the past, investigating this phenomenon would be extremely difficult due to the time and effort required to manually download and annotate press releases. Advances in large language models (LLMs) have made this process much more efficient, enabling automated parsing, feature extraction, and annotation. This has allowed for a structured and scalable analysis of market reactions, uncovering patterns that could inform trading strategies.
+## 📘 Introduction
 
+After years working in biotech, I became increasingly curious about how markets respond to clinical trial results and FDA decisions. Surprisingly, **positive trial outcomes sometimes triggered stock price drops**, while **negative results occasionally caused gains**. This counterintuitive behavior inspired me to dig deeper: *Are there hidden patterns in how the market reacts to biotech press releases?*
 
-# Data
-I analyzed approximately 30,000 press releases from around 100 biotechnology and pharmaceutical companies, spanning the years 2014 to 2025. These press releases were manually collected from each company's website as raw HTML files and then processed using the scripts provided in the `data/data_processing_scripts/` directory. Stock price data corresponding to these press releases was downloaded using the `yfinance` library, enabling us to link market reactions to specific events.
+Thanks to recent advances in **large language models (LLMs)**, it's now possible to extract nuanced insights from unstructured text at scale. This project uses LLMs to automate the parsing and annotation of ~30,000 biotech press releases from 2014–2025.
 
-Manually extracting key information from each press release—such as the date of publication, title, text, and classifications like "Financial Announcement" or "Change in Board of Directors," as well as details like whether the drug was a small molecule or biologic—would have been extremely time-intensive. To address this, I leveraged large language models (LLMs) to efficiently parse and annotate key features from each article. This approach allowed for the creation of a structured and detailed dataset while significantly reducing the time and effort required.
+Each release was processed using a library of tailored prompts that extracted structured features such as:
 
-In addition to the raw press release files, some processed data is available in the form of CSV files. These include datasets of positive clinical trial result press releases and negative press releases, which are some of the most closely investigated parts of this analysis.
+- **Publication metadata** (date, time, timezone, title)
+- **Clinical trial outcomes** (efficacy, survival rates, adverse events)
+- **Narrative tone and sentiment** (e.g., bullishness, hedging, promotional language)
+- **Strategic or commercial signals** (pipeline prioritization, commercial readiness, M&A potential)
+- **Audience targeting and credibility cues** (investor focus, third-party validation, media presence)
+- **Trial design rigor** and **regulatory framing**
 
-The full dataset is not included in this repository due to its size (approximately 3GB). However, you can reconstruct the database using the scripts provided in the `data/data_processing_scripts/` directory, along with the source files located in the `data/press_releases/` directory.
+These annotations were not just for descriptive analysis. I also used them to train **Random Forest classifiers** to predict post-event price movement. Specifically, I explored whether these qualitative features—along with technical indicators like recent volatility and price momentum—could help forecast:
 
-If you'd prefer to access the pre-processed database directly, feel free to reach out to me at **hansenrjhan@gmail.com**, and I’d be happy to share it with you.
+1. **Whether a stock would significantly move in the 30 days following a press release**, and  
+2. **In which direction that movement would occur**.
 
-**Note:**  
-This analysis excludes companies that were merged, acquired, or went bankrupt during the study period. As a result, the dataset is inherently biased toward companies that did not experience these events. This limitation may have particular significance for interpreting the results of **Positive Events**, which could lead to a buyout, or **Negative Events**, which might result in company collapse. These excluded scenarios could represent extreme outcomes that are not captured in the current analysis.
-
-# Results
-
-## Press Release Types and Their Impact on Stock Price Volatility
-
-I identified approximately 9 distinct types of press releases, including **Clinical Trial Updates or Regulatory Updates**, **Press Related to Stock Offerings**, **Partnerships, Collaborations, or Licensing Agreements**, **Quarterly or Annual Financial Updates**, **Changes in Executive Management or Board of Directors**, **Company Attendance at Conferences**, **Legal Disputes**, **Other**, and **Press Releases Related to Index Inclusions**. These categories exhibit varying levels of stock price volatility, with some showing much higher variability in market reactions than others. For example, **Clinical Trial Updates or Regulatory Updates** and **Press Related to Stock Offerings** tend to have higher volatility, reflecting the market's sensitivity to these announcements.
-
-To estimate the immediate effect of the event on stock price, I calculated the change in stock price from the average of the two days before the event to the price one day after the event. This approach accounts for potential information leakage, as press releases may be issued either before or after trading hours on the day of the event. By using this buffer, we ensure a more accurate assessment of the event's impact on stock price.
-
-**Table 1. Stock Price Change 1 Day After Press Release by Release Type (Sorted by Volatility)**  
-The table below summarizes the standard deviation (volatility) of stock price changes, along with other statistics such as mean, median, and percentiles, for each press release type. The data is sorted in descending order of volatility.
-
-| Press Release Type                                      | Std Dev | Mean Change | Median Change | Min Change | Max Change | 25th Percentile | 75th Percentile | Count |
-|---------------------------------------------------------|---------|-------------|---------------|------------|------------|-----------------|-----------------|-------|
-| Press Related to Stock Offerings, Inclusion in Indexes | 0.16331 | 0.017534    | -0.001441     | -0.673332  | 3.065537   | -0.036009       | 0.035415        | 2402  |
-| Clinical Trial Update or Regulatory Update             | 0.14796 | 0.006826    | -0.000266     | -0.849870  | 3.423897   | -0.022527       | 0.023950        | 7247  |
-| Partnership, Collaboration, or Licensing Agreement     | 0.13076 | 0.017683    | 0.003043      | -0.616836  | 1.928587   | -0.017324       | 0.028662        | 1306  |
-| Quarterly or Annual Financial Update                   | 0.10273 | 0.002964    | -0.001812     | -0.715528  | 2.633242   | -0.036001       | 0.033297        | 4276  |
-| Change in Executive Management or Board of Directors   | 0.07304 | -0.001377   | -0.005778     | -0.310005  | 0.847846   | -0.035288       | 0.020359        | 1196  |
-| Other                                                  | 0.07156 | 0.006649    | 0.000593      | -0.681751  | 0.979390   | -0.016893       | 0.021230        | 3017  |
-| Company to Attend Conference                           | 0.07032 | 0.005604    | 0.001650      | -0.656182  | 1.171123   | -0.025438       | 0.029169        | 4777  |
-| Legal Dispute                                          | 0.06202 | 0.017984    | 0.007050      | -0.065337  | 0.315043   | -0.007444       | 0.020771        | 90    |
+For example: *If a stock dropped -5% on day one after a "Positive" press release, could we predict whether it would recover?*  
+By blending natural language insights with price history, the goal was to model event-driven trading opportunities in biotech using LLM-informed signals.
 
 
-## Counterintuitive Market Reactions to Clinical Trial Results: Positive Outcomes Aren't Always Positive
+## 📊 Data Overview
 
-For the "Clinical Trial Update or Regulatory Update" category, I further classified the results into **Positive**, **Negative**, **Mixed**, or **Null** outcomes. The chart below illustrates the distribution of stock price changes from the average of two days before the event to one day after the event, based on these classifications.
+This project analyzes **~30,000 press releases** from **~100 biotech and pharmaceutical companies** between **2014–2025**. 
 
-Interestingly, the data reveals some counterintuitive trends:
-- For **Positive Results**, 1583 samples led to positive stock price changes, but 1413 resulted in negative changes. This surprising finding aligns with the initial motivation for this work—that nearly half of the "positive results" led to negative stock price changes.
-- **Mixed Results** also showed a roughly 50/50 split between positive and negative stock price changes, possibly reflecting market uncertainty.
-- Even for **Negative Results**, 25 out of 95 press releases surprisingly led to positive stock price changes, further highlighting the complexity of market reactions.
+- Press releases were collected manually from company websites as raw HTML files and parsed using scripts in `data/data_processing_scripts/`.
+- Associated stock price data was sourced using the `yfinance` API.
+- LLMs were used to extract structured features like date, title, and press release type.
 
-Additionally, the table below provides a statistical summary of the returns for each result type:
+Processed CSVs include subsets such as **positive clinical trial outcomes**, **negative outcomes**, and other categories of interest. The full dataset (~3GB) isn’t included in this repo, but you can rebuild it using the provided scripts and press release files.
 
-**Table 2. Statistical Summary of Returns by Result Type**  
-This updated table includes additional metrics such as the count of positive and negative outcomes and their ratio. It highlights that **Positive Results** not only exhibit an almost even split between positive and negative outcomes, but their mean return is only 1.6%. This suggests that the returns are effectively random, and even the outliers do not heavily skew the results toward being positive. In contrast, **Negative Results** typically lead to negative returns most of the time, with a mean return of -12%, indicating a more consistent and heavily negative market reaction.
+Want the full processed dataset? Email me at **hansenrjhan@gmail.com**.
 
-| Result Type       | Mean Return | Median Return | Std Dev  | 25th Percentile | 75th Percentile | Positive Count | Negative Count | Positive-to-Negative Ratio |
-|-------------------|-------------|---------------|----------|-----------------|-----------------|----------------|----------------|----------------------------|
-| Positive Results  | 0.016827    | 0.002125      | 0.171329 | -0.022216       | 0.026125        | 1583           | 1413           | 1.123317                   |
-| Mixed Results     | -0.077735   | -0.008186     | 0.175897 | -0.085165       | 0.011723        | 35             | 39             | 0.897436                   |
-| Negative Results  | -0.120127   | -0.018451     | 0.233041 | -0.149855       | 0.000612        | 25             | 70             | 0.357143                   |
+> ⚠️ **Note**: This dataset excludes companies that were acquired, merged, or went bankrupt — so extreme outcomes (like buyouts or collapses) are underrepresented.
 
-**Figure 1. Distribution of Stock Price Changes 1 Day After Press Release by Clinical Trial Result Type**  
-This box plot shows the price change distribution for Positive, Mixed, and Negative results. Positive results generally exhibit higher variability and larger positive price changes, while Negative results tend to show a more consistent downward trend. Mixed results show minimal price movement, reflecting market uncertainty.
+## 🧪 Methods
+
+This project combines natural language processing and quantitative modeling to explore the market impact of biotech press releases. The workflow is as follows:
+
+1. **LLM Prompting and Feature Extraction**  
+   Using carefully designed prompts, large language models were employed to extract structured insights from each press release. This included:
+   - Clinical outcome and tone
+   - Strategic indicators (e.g., pipeline reprioritization, M&A hints)
+   - Commercial readiness and regulatory framing
+   - Audience targeting and credibility cues
+   - Trial design features and real-world impact
+
+   A total of 8 prompt templates were used to capture different angles of analysis.
+
+2. **Feature Integration**  
+   The extracted labels were compiled into structured JSON objects and merged with historical stock price features (e.g., volatility, trajectory, day-1 reaction).
+
+3. **Modeling and Backtesting**  
+   Using the combined dataset, classifiers (Random Forests) were trained to predict:
+   - Whether a stock would move significantly in the 30 days following a press release
+   - The **direction** of the movement (positive or negative)
+   
+   These models were then tested using simulated event-based backtests to evaluate performance in realistic trading scenarios.
+
+![Methods Diagram](images/methods.png)
+
+## 📈 Results
+
+### 📰 Press Release Categories and Volatility
+
+Press releases were grouped into 9 major categories such as:
+
+- Clinical Trial / Regulatory Updates
+- Stock Offerings / Index Inclusions
+- Partnerships / Collaborations
+- Executive Changes
+- Legal Disputes
+
+### 📈 Volatility by Press Release Type
+
+To understand which types of announcements drive the biggest market reactions, I calculated the **1-day stock price change** following each press release. The change is measured relative to the average of the **two days before the event**, which helps account for announcements released outside of trading hours.
+
+Among all press release types:
+
+- **Stock Offering / Index Inclusion** and **Clinical Trial / Regulatory Updates** exhibited the **highest volatility**, with large swings in both directions.
+- **Partnerships and Licensing Agreements** also showed significant movement, suggesting investors pay close attention to these strategic events.
+- In contrast, more routine updates such as **executive changes**, **financials**, **conferences**, and **legal disputes** produced more muted market responses.
+
+📋 *Sample Summary (sorted by volatility):*
+
+| Type                                              | Std Dev | Mean    | Median  | Min     | Max     | Count |
+|---------------------------------------------------|---------|---------|---------|---------|---------|--------|
+| Stock Offerings / Index Inclusion                 | 0.163   | 1.75%   | -0.14%  | -67.3%  | +306.6% | 2402   |
+| Clinical Trial / Regulatory Update                | 0.148   | 0.68%   | -0.03%  | -84.9%  | +342.4% | 7247   |
+| Partnership / Collaboration / Licensing Agreement | 0.131   | 1.77%   | 0.30%   | -61.7%  | +192.9% | 1306   |
+| Financial Update (Quarterly or Annual)            | 0.103   | 0.30%   | -0.18%  | -71.6%  | +263.3% | 4276   |
+| Executive / Board Changes                         | 0.073   | -0.14%  | -0.58%  | -31.0%  | +84.8%  | 1196   |
+| Other                                             | 0.072   | 0.66%   | 0.06%   | -68.2%  | +97.9%  | 3017   |
+| Company Conference Participation                  | 0.070   | 0.56%   | 0.17%   | -65.6%  | +117.1% | 4777   |
+| Legal Dispute                                     | 0.062   | 1.80%   | 0.71%   | -6.5%   | +31.5%  | 90     |
+
+
+### 🔄 Market Reactions to Clinical Trial Outcomes
+
+We used LLMs to categorize trial-related press releases as:
+
+- **Positive**
+- **Negative**
+- **Mixed**
+- **Null**
+
+Surprisingly, nearly half of the positive outcomes triggered negative price reactions—a counterintuitive pattern that originally sparked my curiosity and inspired this project. 
+
+| Result | Mean Return | Positive Count | Negative Count | Pos/Neg Ratio |
+|--------|-------------|----------------|----------------|-------|
+| Positive | +1.6% | 1583 | 1413 | 1.12 |
+| Mixed    | -7.8% | 35   | 39   | 0.89 |
+| Negative | -12.0% | 25   | 70   | 0.36 |
+
+📊 *Figure 1 — Price change distribution by result type:*
 
 ![Distribution of Price Change by Event Type](images/result_type_distribution.png)
 
-We conducted additional analyses to determine whether certain factors, such as **Phase**, **Combination vs. Monotherapy**, or **Regulatory Action Types**, could help explain the observed trends in positive and negative market reactions. 
+### 🔍 Deeper Insights: What Drives Market Reactions to Positive Trial Results?
 
-### Key Findings:
-1. **Phase and Combination vs. Monotherapy**:  
-   We observed no significant difference in the ratio of positive to negative results when comparing clinical trial phases (e.g., Phase 1, 2, or 3) or whether the treatment was a combination therapy or monotherapy. These factors did not appear to strongly influence the likelihood of positive or negative market reactions.
+While the previous section showed that **positive clinical trial results** often lead to surprisingly mixed stock price reactions, this raises a key question: *What factors influence whether the market reacts positively or negatively to seemingly good news?* To explore this, I analyzed a range of contextual features—such as market cap, timing of the announcement, regulatory involvement, trial characteristics, and therapeutic focus—to see if any patterns emerged that might help explain these divergent outcomes.
 
-2. **Market Cap**:  
-   Small-cap stocks were more likely to have negative responses to news overall, with a **positive-to-negative ratio of 0.80**, indicating that negative reactions outweighed positive ones. In contrast, mid-cap and large-cap stocks had ratios of **1.26** and **1.19**, respectively, suggesting that larger companies tend to experience more favorable market reactions.
+The following table summarizes the **mean return**, **sample size**, and **positive-to-negative ratio** of press releases explicitly labeled as “Positive Results,” broken down by category.
 
-3. **Timing of Press Releases**:  
-   Press releases indicating **future events** (e.g., "Company X to announce Phase 2 results at AACR next Fall") had a **positive-to-negative ratio of 1.21**, compared to a ratio of **1.07** for press releases focused on **present events**. This suggests that forward-looking announcements may generate slightly more positive market sentiment.
+Several noteworthy patterns emerged:
 
-4. **Regulatory Action Types**:  
-   We also examined the regulatory action types associated with positive results to see if any patterns emerged. The table below summarizes the results:
+- **Market Cap Matters**  
+  Mid- and large-cap companies had higher positive-to-negative ratios (1.33 and 1.25, respectively), suggesting that **investors are more likely to reward positive results from larger, more established firms**. In contrast, small caps often saw negative responses, with a ratio below 1.0.
 
-**Table 4. Statistical Summary of Returns by Regulatory Action Type**  
-This table highlights the mean, median, and standard deviation of returns, along with the count of positive and negative outcomes and their ratio, for each regulatory action type. Notable findings include:
-- **Emergency Use Authorization (EUA)** had the highest positive-to-negative ratio (1.50), suggesting strong market optimism for these announcements.
-- **Supplemental New Drug Applications (sNDA)** and **Fast Track, Orphan, or Priority Review Designations** also showed relatively high ratios of 1.36 and 1.24, respectively.
-- **New Drug Applications (NDA)** had a ratio of 1.13, indicating a more balanced market reaction.
-- **Label Expansions** and **Investigational New Drug (IND) Applications** had ratios close to or below 1, suggesting more neutral or mixed market responses.
+- **Timing is Telling**  
+  Press releases that pointed to **future milestones** or results (e.g., upcoming presentations or planned regulatory submissions) were more likely to generate positive sentiment than those reporting current outcomes. This may reflect the market's tendency to price in **forward-looking optimism**.
 
-| Regulatory Action Type                                           | Mean Return | Median Return | Std Dev  | 25th Percentile | 75th Percentile | Count | Positive Count | Negative Count | Positive-to-Negative Ratio |
-|------------------------------------------------------------------|-------------|---------------|----------|-----------------|-----------------|-------|----------------|----------------|----------------------------|
-| Emergency Use Authorization (EUA)                               | 0.006542    | 0.014666      | 0.067890 | -0.043302       | 0.022153        | 25    | 15             | 10             | 1.500000                   |
-| Supplemental New Drug Application (sNDA)                        | 0.015016    | 0.004358      | 0.113649 | -0.015091       | 0.017297        | 78    | 45             | 33             | 1.363636                   |
-| Fast Track, Orphan, Priority Review, or Similar Designation      | 0.009712    | 0.003294      | 0.120511 | -0.024407       | 0.031427        | 94    | 52             | 42             | 1.238095                   |
-| New Drug Application (NDA)                                      | 0.054944    | 0.002381      | 0.336181 | -0.017525       | 0.028092        | 331   | 176            | 155            | 1.135484                   |
-| Label Expansion                                                 | -0.006008   | 0.001462      | 0.065487 | -0.011474       | 0.021141        | 41    | 21             | 20             | 1.050000                   |
-| Investigational New Drug (IND) Application                      | 0.015153    | -0.001144     | 0.110596 | -0.050600       | 0.063692        | 24    | 12             | 12             | 1.000000                   |
-| Biologics License Application (BLA)                             | 0.009459    | 0.001439      | 0.085916 | -0.020792       | 0.020627        | 22    | 11             | 11             | 1.000000                   |
-| Regulatory Opinion Only                                         | 0.020800    | -0.001306     | 0.192951 | -0.020213       | 0.015773        | 93    | 45             | 48             | 0.937500                   |
+- **Regulatory Context**  
+  News tied to **Emergency Use Authorizations (EUA)** and **Supplemental NDAs** generated the strongest positive bias, with ratios of 1.50 and 1.36 respectively. Meanwhile, other categories like **Regulatory Opinions** or **Label Expansions** showed much more mixed reactions.
 
-These findings suggest that while certain regulatory action types, such as EUA and sNDA, tend to generate more positive market reactions, the overall trends remain nuanced. Factors such as market cap, timing of announcements, and the specific regulatory context all contribute to the complexity of interpreting market responses to press releases.
+- **Trial Design Nuances**  
+  Trials involving **combination therapies** slightly outperformed monotherapies in terms of market optimism. Higher trial phases (like **Phase 3**) also correlated with better returns, likely due to the perceived de-risking of results.
+
+- **Partnership Signals**  
+  Announcements involving a **partnership or co-sponsor** actually received **slightly more favorable market responses** than independent ones. This may reflect investor confidence in external validation, shared development risk, or the credibility added by collaboration with larger or more experienced partners.
+
+- **Therapeutic Area Sensitivity**  
+  Diseases affecting the **nervous system**, **respiratory system**, and **skin** were associated with stronger market reactions than areas like **urogenital** or **infectious diseases**, which actually trended negatively—even after “positive” trial outcomes.
+
+- **Drug Modality Differences**  
+  While **small molecules**, **biologics**, and **gene therapies** tended to have favorable market reactions, others like **vaccines**, **peptides**, and **oligonucleotides** were more mixed—suggesting that the market may still be cautious about less-established or more experimental modalities.
+
+Together, these results highlight that a "positive" clinical trial result isn't always enough on its own to move a stock higher. The **context**—who's announcing, what the disease is, how the trial was structured, and what regulatory pathway is involved—plays a crucial role in shaping investor sentiment.
 
 
-## Exploring Heuristic Trading Rules Based on Event Trends
+### 📊 Summary of Event Impact by Category
 
-One of the ideas explored in this project was to identify potential trends in stock price movements following specific types of press releases. The goal was to determine whether heuristic rules could be developed to capitalize on these trends. For example: Do **Positive Results** that lead to a 5%+ drop in price on Day 1 tend to recover and show price increases over the next 30 days?
+| Category                  | Subgroup / Type                         | Mean Return | Count | Pos/Neg Ratio |
+|---------------------------|------------------------------------------|-------------|--------|----------------|
+| **Market Cap**            | Small Cap                                | 0.013       | 923    | 0.857          |
+|                           | Mid Cap                                  | 0.048       | 561    | 1.328          |
+|                           | Large Cap                                | 0.008       | 1504   | 1.248          |
+| **Timing**                | Future-Looking Release                   | 0.019       | 155    | 1.153          |
+|                           | Present-Focused Release                  | 0.017       | 2839   | 1.122          |
+| **Regulatory Body**       | FDA                                      | 0.027       | 1242   | 1.206          |
+|                           | EMA                                      | -0.008      | 65     | 0.857          |
+|                           | Other                                    | 0.030       | 29     | 0.813          |
+| **Regulatory Action Type**| Emergency Use Authorization (EUA)        | 0.007       | 25     | 1.500          |
+|                           | Supplemental NDA (sNDA)                  | 0.015       | 78     | 1.364          |
+|                           | Fast Track / Orphan / Priority           | 0.010       | 94     | 1.238          |
+|                           | New Drug Application (NDA)               | 0.055       | 331    | 1.135          |
+|                           | Label Expansion                          | -0.006      | 41     | 1.050          |
+|                           | IND Application                          | 0.015       | 24     | 1.000          |
+|                           | Biologics License App (BLA)              | 0.009       | 22     | 1.000          |
+|                           | Regulatory Opinion Only                  | 0.021       | 93     | 0.938          |
+| **Trial Type**            | Combination Therapy                      | 0.015       | 810    | 1.189          |
+|                           | Monotherapy                              | 0.018       | 2175   | 1.101          |
+| **Trial Phase**           | Phase 3                                  | 0.019       | 1417   | 1.167          |
+|                           | Phase 2                                  | 0.011       | 909    | 1.134          |
+|                           | Phase 1                                  | 0.007       | 528    | 0.899          |
+| **Partnership Type**      | Partnership                              | 0.005       | 1101   | 1.211          |
+|                           | Independent                              | 0.023       | 1797   | 1.087          |
+| **Therapeutic Area**      | Nervous System Diseases                  | 0.030       | 449    | 1.339          |
+|                           | Respiratory Tract Diseases               | 0.030       | 133    | 1.293          |
+|                           | Skin Diseases                            | 0.017       | 192    | 1.286          |
+|                           | Hematology                               | 0.014       | 575    | 1.203          |
+|                           | Inflammation & Immunology                | 0.021       | 448    | 1.175          |
+|                           | Oncology                                 | 0.008       | 1047   | 1.128          |
+|                           | Rare Genetic Diseases                    | 0.021       | 498    | 1.119          |
+|                           | Cardiovascular & Metabolic Diseases      | 0.026       | 426    | 1.029          |
+|                           | Infectious Diseases                      | 0.023       | 295    | 0.855          |
+|                           | Urogenital Diseases                      | -0.006      | 34     | 0.619          |
+| **Drug Modality**         | Small Molecule                           | 0.018       | 1348   | 1.150          |
+|                           | Gene Therapy                             | 0.005       | 226    | 1.194          |
+|                           | Biologic                                 | 0.016       | 1423   | 1.146          |
+|                           | Oligonucleotide                          | 0.005       | 115    | 0.983          |
+|                           | Peptide                                  | 0.034       | 90     | 0.957          |
+|                           | Vaccine                                  | 0.018       | 119    | 0.919          |
 
-To test these ideas, I simulated various trading strategies based on heuristic rules and compared their performance to a control portfolio (S&P 500). The chart below illustrates the cumulative portfolio balance for each strategy over time.
+Market capitalization was classified using a simple rule-based function: companies with a market cap under $2B were labeled **Small Cap**, those between $2B and $10B as **Mid Cap**, and those above $10B as **Large Cap**.
 
-**Figure 2. Portfolio Performance of Heuristic Trading Strategies**  
-This figure compares the performance of different heuristic trading strategies such as going long on positive results with Day 1 price increases, while also demonstrating the risks of other strategies, such as going long on positive results with Day 1 price drops.
+## 💡 Heuristic Strategy Testing
+
+We explored whether basic trading rules could exploit these patterns. For example:
+
+> “Do positive results with a Day 1 price drop of >5% tend to bounce back in the next 30 days?”
+
+We simulated a few of these strategies and compared them against an S&P 500 benchmark.
+
+📉 *Figure 2 — Strategy performance over time:*
 
 ![Comparing Heuristic Trading Strategies](images/comparing_heuristic_strategies.png)
 
 
+## 🚧 Future Directions
+
+I'm no longer actively working on this project, but here are ideas if you want to build on it:
+
+- **RSS Integration:** Automate live press release tracking from company IR feeds
+- **Explore Other Release Types:** Partnerships & offerings had high volatility too
+- **Apply Beyond Biotech:** Framework could be adapted for sectors like medtech, fintech, etc.
 
 
-# Future Work
-I am not actively working on this project or planning to pursue further development in the future. However, there are several potential directions I've thought of for anyone interested in expanding this work:
+## 📬 Contact
 
-- **RSS Feeds**: each publicly traded company has an RSS feed which sends live updates of articles that would fit into this analysis pipeline
-- **Deeper Analysis of Other Press Release Types**: I only closely examined the "Clinical Trial Update or Regulatory Update" press release type - it would be very interesting to look at some of the other ones, especially "Press Related to Stock Offerings, Inclusion in Indexes" and "Partnership, Collaboration, or Licensing Agreement" press releases which also had high volatility around the events
-- **Applying to Other Sectors**: it would be interesting to apply this framework to other sectors besides biotech / pharma - close cousins could be medtech devices, but virtually any sector that is publicly listed and has investor relations sites with press releases would be interesting candidates for similar analysis
+Want the data or curious to build on this?  
+Reach out: **hansenrjhan@gmail.com**
+
+
