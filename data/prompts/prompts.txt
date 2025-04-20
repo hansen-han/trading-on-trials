@@ -1,0 +1,136 @@
+
+
+# Prompt 1
+# Extracting article title, text, date of publication
+
+This is text from a company's press release. I want you to extract the date that it was published - this will typically be the first date mentioned. Return JSON with fields date_published (MM_DD_YYYY), time_of_publication (XX:XX AM/PM), timezone (EST/PST/GMT...), press_release_title (text).  If the value is unclear, do not guess, return null for the field.
+
+
+# Prompt 2
+# Extracting narrative style, tone, and investor relations framing
+
+You are analyzing a biotech press release to extract narrative style, tone, promotional framing, and signals of forward progress. Return a JSON object with the following fields:
+
+{
+  "mentions_pipeline_expansion": <true / false>,
+  "mentions_lack_of_competitors": <true / false>,
+  "mentions_next_milestone": <true / false>,
+  "mentions_specific_timeline": <true / false>,
+  "timeline_confidence_score": <number from 1 (vague or speculative) to 10 (specific and confident)>,
+  "mentions_upcoming_data_readout": <true / false>,
+  "is_ir_tone_dominant": <true / false>,
+  "ir_tone_score": <number from 1 (dry and technical, tailored for scientists) to 10 (promotional and tailored to investors)>,
+  "uses_promotional_language": <true / false>,
+  "uses_fomo_language": <true / false>,
+  "narrative_style": "<Promotional / Technical / Strategic / Neutral>",
+  "mentions_market_impact": <true / false>,
+  "tone_score": <number from 1 (dry and technical) to 10 (optimistic and promotional)>,
+  "forward_looking_statements": <true / false>,
+  "hedging_score": <number from 1 (no hedging) to 10 (high hedging language)>,
+  "bullish_sentiment_score": <number from 1 to 10>
+}
+
+# Prompt 3
+# Extracting clinical outcomes and real-world relevance
+
+Analyze this biotech press release to extract structured clinical outcomes and real-world relevance. Return the following JSON object:
+
+{
+  "mentions_statistical_significance": <true / false>,
+  "efficacy_percent_improvement": <percentage or null>,
+  "survival_rate_mentioned": <true / false>,
+  "outcome_significance_score": <number from 1 (minor) to 10 (groundbreaking)>,
+  "mentions_clinically_meaningful": <true / false>,
+  "mentions_quality_of_life_improvement": <true / false>,
+  "mentions_hospitalization_reduction": <true / false>,
+  "mentions_symptom_relief": <true / false>,
+  "mentions_real_world_relevance": <true / false>,
+  "mentions_durable_response": <true / false>,
+  "response_depth": "<Deep / Moderate / Minimal / Unknown>",
+  "mentions_response_in_subgroups": <true / false>,
+  "uses_vague_descriptors_only": <true / false>,
+  "confidence_language_score": <number from 1 (highly uncertain, cautious tone) to 10 (very confident, assertive, and definitive tone)>,
+  "mentions_adverse_events": <true / false>,
+  "safety_profile_summary": "<Well-tolerated / Mixed / Concerning>"
+}
+
+# Prompt 4
+# Extracting strategic signals
+
+You are analyzing a biotech press release for signs of strategic shifts, urgency, and internal business pressures. Extract the following structured signals and return the following fields as JSON. If a field is unclear, return null and DO NOT GUESS.
+
+{
+  "mentions_funding_pressure": <true / false>,
+  "mentions_employee_changes_or_hiring": <true / false>,
+  "suggests_m_and_a_potential": <true / false>,
+  "mentions_strategic_review_or_business_model_shift": <true / false>,
+  "urgency_score": <1–10>,
+  "mentions_cost_cutting": <true / false>,
+  "mentions_pipeline_prioritization": <true / false>
+}
+
+# Prompt 5
+# Extracting commercial readiness
+
+You are analyzing a biotech press release for signs of commercial readiness and market entry planning. Extract the following fields as JSON. If a field is not applicable, return null.
+
+{
+  "mentions_pre_launch_preparations": <true / false>,
+  "mentions_manufacturing_or_supply_chain": <true / false>,
+  "mentions_distribution_partners": <true / false>,
+  "mentions_sales_team_or_hiring": <true / false>,
+  "mentions_market_access_or_reimbursement": <true / false>,
+  "commercial_readiness_score": <1 (no evidence) to 10 (extensively discussed)>
+}
+
+# Prompt 6
+# Extracting audience targeting
+
+You are analyzing a biotech press release to understand who it is primarily written for and how it’s framed. Extract data from the attached press release and return JSON with the following structured information:
+
+{
+  "primary_audience": <"investor" | "scientific" | "media/general public" | "regulatory" | null>,
+  "mentions_media_outlets_or_coverage": <true / false>,
+  "mentions_social_or_patient_engagement": <true / false>,
+  "includes_technical_figures_or_metrics": <true / false>,
+  "mentions_target_stock_exchange_or_index": <true / false>,
+  "language_alignment_with_regulators": <true / false>
+}
+
+# Prompt 7
+# Extracting trial design rigor
+
+You are analyzing a biotech press release for trial design features and study realism. Extract data from the attached press release and return JSON with the following structured information:
+
+{
+  "mentions_adaptive_trial_design": <true / false>,
+  "mentions_placebo_or_comparator_arm": <true / false>,
+  "mentions_real_world_evidence": <true / false>,
+  "mentions_biomarker_selection": <true / false>,
+  "mentions_global_or_multicenter_scope": <true / false>,
+  "trial_design_rigor_score": <1 (minimal rigor) to 10 (robust and methodologically strong)>
+}
+
+# Prompt 8
+# Extracting novelty, credibility, and confidence
+
+You are analyzing a biotech press release for subtle cues around market signaling, management confidence, novelty of the news, and credibility framing. Extract structured features as JSON using the definitions and value ranges provided.
+
+{
+  "announcement_novelty_score": <number from 1 (repeated or known) to 10 (entirely new and previously undisclosed)>,
+  "mentions_previous_similar_announcements": <true / false>,
+  "mentions_prior_failure_or_setback": <true / false>,
+  "mentions_reversal_or_recovery": <true / false>,
+  "mentions_internal_confidence_measures": <true / false>,
+  "includes_third_party_validation": <true / false>,
+  "mentions_patient_advocacy_group_or_foundation": <true / false>,
+  "mentions_key_opinion_leader": <true / false>,
+  "novel_mechanism_of_action": <true / false>,
+  "competitive_differentiation_score": <number from 1 (none mentioned) to 10 (strongly differentiated vs competitors)>,
+  "mentions_market_opportunity_size": <true / false>,
+  "mentions_cost_effectiveness_or_pricing": <true / false>,
+  "language_indicating_management_confidence": <true / false>,
+  "mentions_risks_or_uncertainties": <true / false>,
+  "risk_disclosure_score": <number from 1 (no mention of risk) to 10 (transparent, balanced discussion of risks)>,
+  "overemphasized_positivity_score": <number from 1 (very neutral and factual) to 10 (heavily embellished or spin-heavy)>
+}
