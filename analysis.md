@@ -5,9 +5,9 @@ In the past, investigating this phenomenon would be extremely difficult due to t
 
 
 # Data
-We analyzed approximately 30,000 press releases from around 100 biotechnology and pharmaceutical companies, spanning the years 2014 to 2025. These press releases were manually collected from each company's website as raw HTML files and then processed using the scripts provided in the `data/data_processing_scripts/` directory. Stock price data corresponding to these press releases was downloaded using the `yfinance` library, enabling us to link market reactions to specific events.
+I analyzed approximately 30,000 press releases from around 100 biotechnology and pharmaceutical companies, spanning the years 2014 to 2025. These press releases were manually collected from each company's website as raw HTML files and then processed using the scripts provided in the `data/data_processing_scripts/` directory. Stock price data corresponding to these press releases was downloaded using the `yfinance` library, enabling us to link market reactions to specific events.
 
-Manually extracting key information from each press release—such as the date of publication, title, text, and classifications like "Financial Announcement" or "Change in Board of Directors," as well as details like whether the drug was a small molecule or biologic—would have been extremely time-intensive. To address this, we leveraged large language models (LLMs) to efficiently parse and annotate key features from each article. This approach allowed for the creation of a structured and detailed dataset while significantly reducing the time and effort required.
+Manually extracting key information from each press release—such as the date of publication, title, text, and classifications like "Financial Announcement" or "Change in Board of Directors," as well as details like whether the drug was a small molecule or biologic—would have been extremely time-intensive. To address this, I leveraged large language models (LLMs) to efficiently parse and annotate key features from each article. This approach allowed for the creation of a structured and detailed dataset while significantly reducing the time and effort required.
 
 In addition to the raw press release files, some processed data is available in the form of CSV files. These include datasets of positive clinical trial result press releases and negative press releases, which are some of the most closely investigated parts of this analysis.
 
@@ -22,9 +22,9 @@ This analysis excludes companies that were merged, acquired, or went bankrupt du
 
 ## Press Release Types and Their Impact on Stock Price Volatility
 
-We identified approximately 9 distinct types of press releases, including **Clinical Trial Updates or Regulatory Updates**, **Press Related to Stock Offerings**, **Partnerships, Collaborations, or Licensing Agreements**, **Quarterly or Annual Financial Updates**, **Changes in Executive Management or Board of Directors**, **Company Attendance at Conferences**, **Legal Disputes**, **Other**, and **Press Releases Related to Index Inclusions**. These categories exhibit varying levels of stock price volatility, with some showing much higher variability in market reactions than others. For example, **Clinical Trial Updates or Regulatory Updates** and **Press Related to Stock Offerings** tend to have higher volatility, reflecting the market's sensitivity to these announcements.
+I identified approximately 9 distinct types of press releases, including **Clinical Trial Updates or Regulatory Updates**, **Press Related to Stock Offerings**, **Partnerships, Collaborations, or Licensing Agreements**, **Quarterly or Annual Financial Updates**, **Changes in Executive Management or Board of Directors**, **Company Attendance at Conferences**, **Legal Disputes**, **Other**, and **Press Releases Related to Index Inclusions**. These categories exhibit varying levels of stock price volatility, with some showing much higher variability in market reactions than others. For example, **Clinical Trial Updates or Regulatory Updates** and **Press Related to Stock Offerings** tend to have higher volatility, reflecting the market's sensitivity to these announcements.
 
-To estimate the immediate effect of the event on stock price, we calculated the change in stock price from the average of the two days before the event to the price one day after the event. This approach accounts for potential information leakage, as press releases may be issued either before or after trading hours on the day of the event. By using this buffer, we ensure a more accurate assessment of the event's impact on stock price.
+To estimate the immediate effect of the event on stock price, I calculated the change in stock price from the average of the two days before the event to the price one day after the event. This approach accounts for potential information leakage, as press releases may be issued either before or after trading hours on the day of the event. By using this buffer, we ensure a more accurate assessment of the event's impact on stock price.
 
 **Table 1. Stock Price Change 1 Day After Press Release by Release Type (Sorted by Volatility)**  
 The table below summarizes the standard deviation (volatility) of stock price changes, along with other statistics such as mean, median, and percentiles, for each press release type. The data is sorted in descending order of volatility.
@@ -43,7 +43,7 @@ The table below summarizes the standard deviation (volatility) of stock price ch
 
 ## Counterintuitive Market Reactions to Clinical Trial Results: Positive Outcomes Aren't Always Positive
 
-For the "Clinical Trial Update or Regulatory Update" category, we further classified the results into **Positive**, **Negative**, **Mixed**, or **Null** outcomes. The chart below illustrates the distribution of stock price changes from the average of two days before the event to one day after the event, based on these classifications.
+For the "Clinical Trial Update or Regulatory Update" category, I further classified the results into **Positive**, **Negative**, **Mixed**, or **Null** outcomes. The chart below illustrates the distribution of stock price changes from the average of two days before the event to one day after the event, based on these classifications.
 
 Interestingly, the data reveals some counterintuitive trends:
 - For **Positive Results**, 1583 samples led to positive stock price changes, but 1413 resulted in negative changes. This surprising finding aligns with the initial motivation for this work—that nearly half of the "positive results" led to negative stock price changes.
@@ -70,11 +70,9 @@ This box plot shows the price change distribution for Positive, Mixed, and Negat
 
 ### Exploring Heuristic Trading Rules Based on Event Trends
 
-One of the ideas explored in this project was to identify potential trends in stock price movements following specific types of press releases. The goal was to determine whether heuristic rules could be developed to capitalize on these trends. For example:
-- Do **Positive Results** that lead to a 5%+ drop in price on Day 1 tend to recover and show price increases over the next 30 days?
-- Do **Negative Results** with a 5%+ drop on Day 1 continue to decline over the next 30 days?
+One of the ideas explored in this project was to identify potential trends in stock price movements following specific types of press releases. The goal was to determine whether heuristic rules could be developed to capitalize on these trends. For example: Do **Positive Results** that lead to a 5%+ drop in price on Day 1 tend to recover and show price increases over the next 30 days?
 
-To test these ideas, we simulated various trading strategies based on heuristic rules and compared their performance to a control portfolio (S&P 500). The chart below illustrates the cumulative portfolio balance for each strategy over time.
+To test these ideas, I simulated various trading strategies based on heuristic rules and compared their performance to a control portfolio (S&P 500). The chart below illustrates the cumulative portfolio balance for each strategy over time.
 
 **Figure 2. Portfolio Performance of Heuristic Trading Strategies**  
 This figure compares the performance of different heuristic trading strategies such as going long on positive results with Day 1 price increases, while also demonstrating the risks of other strategies, such as going long on positive results with Day 1 price drops.
