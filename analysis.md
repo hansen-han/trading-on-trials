@@ -2,7 +2,7 @@
   <img src="images/banner.png" alt="Trading on Trials Banner" width="100%" />
 </p>
 
-## 📘 Introduction
+## Introduction
 
 After years working in biotech, I became increasingly curious about how markets respond to clinical trial results and FDA decisions. Surprisingly, **positive trial outcomes sometimes triggered stock price drops**, while **negative results occasionally caused gains**. This counterintuitive behavior inspired me to dig deeper: *Are there hidden patterns in how the market reacts to biotech press releases?*
 
@@ -26,7 +26,7 @@ For example: *If a stock dropped -5% on day one after a "Positive" press release
 By blending natural language insights with price history, the goal was to model event-driven trading opportunities in biotech using LLM-informed signals.
 
 
-## 📊 Data Overview
+## Data Overview
 
 This project analyzes **~30,000 press releases** from **~100 biotech and pharmaceutical companies** between **2014–2025**. 
 
@@ -34,13 +34,11 @@ This project analyzes **~30,000 press releases** from **~100 biotech and pharmac
 - Associated stock price data was sourced using the `yfinance` API.
 - LLMs were used to extract structured features like date, title, and press release type.
 
-Processed CSVs include subsets such as **positive clinical trial outcomes**, **negative outcomes**, and other categories of interest. The full dataset (~3GB) isn’t included in this repo, but you can rebuild it using the provided scripts and press release files.
-
-Want the full processed dataset? Email me at **hansenrjhan@gmail.com**.
+Processed CSVs include subsets such as **positive clinical trial outcomes**, **negative outcomes**, and other categories of interest. The full dataset (~3GB) isn’t included in this repo due to GitHub file size limits, but you can download it from [Google Drive](https://drive.google.com/file/d/1l1WDZ7gIsvG6SqwvTA5B7s_OA4XrfE5R/view?usp=dr).
 
 > ⚠️ **Note**: This dataset excludes companies that were acquired, merged, or went bankrupt — so extreme outcomes (like buyouts or collapses) are underrepresented.
 
-## 🧪 Methods
+## Methods
 
 This project combines natural language processing and quantitative modeling to explore the market impact of biotech press releases. The workflow is as follows:
 
@@ -66,7 +64,7 @@ This project combines natural language processing and quantitative modeling to e
 
 ![Methods Diagram](images/methods.png)
 
-## 📈 Results
+## Results
 
 ### 📰 Press Release Categories and Volatility
 
@@ -78,7 +76,7 @@ Press releases were grouped into 9 major categories such as:
 - Executive Changes
 - Legal Disputes
 
-### 📈 Volatility by Press Release Type
+### Volatility by Press Release Type
 
 To understand which types of announcements drive the biggest market reactions, I calculated the **1-day stock price change** following each press release. The change is measured relative to the average of the **two days before the event**, which helps account for announcements released outside of trading hours.
 
@@ -102,7 +100,7 @@ Among all press release types:
 | Legal Dispute                                     | 0.062   | 1.80%   | 0.71%   | -6.5%   | +31.5%  | 90     |
 
 
-### 🔄 Market Reactions to Clinical Trial Outcomes
+### Market Reactions to Clinical Trial Outcomes
 
 We used LLMs to categorize trial-related press releases as:
 
@@ -119,11 +117,11 @@ Surprisingly, nearly half of the positive outcomes triggered negative price reac
 | Mixed    | -7.8% | 35   | 39   | 0.89 |
 | Negative | -12.0% | 25   | 70   | 0.36 |
 
-📊 *Figure 1 — Price change distribution by result type:*
+*Figure 1 — Price change distribution by result type:*
 
 ![Distribution of Price Change by Event Type](images/result_type_distribution.png)
 
-### 🔍 Deeper Insights: What Drives Market Reactions to Positive Trial Results?
+### Deeper Insights: What Drives Market Reactions to Positive Trial Results?
 
 While the previous section showed that **positive clinical trial results** often lead to surprisingly mixed stock price reactions, this raises a key question: *What factors influence whether the market reacts positively or negatively to seemingly good news?* To explore this, I analyzed a range of contextual features—such as market cap, timing of the announcement, regulatory involvement, trial characteristics, and therapeutic focus—to see if any patterns emerged that might help explain these divergent outcomes.
 
@@ -155,7 +153,7 @@ Several noteworthy patterns emerged:
 Together, these results highlight that a "positive" clinical trial result isn't always enough on its own to move a stock higher. The **context**—who's announcing, what the disease is, how the trial was structured, and what regulatory pathway is involved—plays a crucial role in shaping investor sentiment.
 
 
-### 📊 Summary of Event Impact by Category
+### Summary of Event Impact by Category
 
 | Category                  | Subgroup / Type                         | Mean Return | Count | Pos/Neg Ratio |
 |---------------------------|------------------------------------------|-------------|--------|----------------|
@@ -201,7 +199,29 @@ Together, these results highlight that a "positive" clinical trial result isn't 
 
 Market capitalization was classified using a simple rule-based function: companies with a market cap under $2B were labeled **Small Cap**, those between $2B and $10B as **Mid Cap**, and those above $10B as **Large Cap**.
 
-## 💡 Heuristic Strategy Testing
+### Feature Importance Analysis: What Drives Immediate Price Reaction for Positive Results?
+
+To better understand what factors influence the **1-day price reaction** following a “Positive Results” press release, I trained a logistic regression model using **recursive feature elimination (RFE)** and cross-validated it over 10 folds. The model aimed to predict whether a stock would move up or down the day after positive results were announced, based on structured features extracted by LLMs.
+
+While the model achieved modest predictive performance (54% accuracy, with stronger recall on upward movements), the primary goal here was interpretability: identifying which features consistently contributed to short-term positive price reactions.
+
+Across 10 cross-validation folds, the following features emerged as the **most consistently important**:
+
+- `combination_or_monotherapy_combo`  
+- `combination_or_monotherapy_mono`  
+- `how_data_is_shared_Paper Publication, Conference Presentation`  
+- `regulatory_action_type_Supplemental Biologics License Application (sBLA)`  
+- `market_cap_label_Small Cap`  
+- `regulatory_action_type_Rolling Biologics License Application (BLA) Submission)`  
+- `regulatory_action_type_Supplemental New Drug Application (sBLA)`  
+- `regulatory_body_Health Canada`  
+- `regulatory_action_type_Supplemental New Drug Application (sNDA)`  
+- `regulatory_action_type_Marketing Authorization Application (MAA)`
+
+These patterns suggest that **trial structure (e.g., monotherapy vs. combo)**, **how results are shared (e.g., conference vs. PR)**, and **regulatory context** (type of filing, country) all meaningfully influence short-term investor behavior when the underlying outcome is labeled “positive.”
+
+
+## Heuristic Strategy Testing
 
 We explored whether basic trading rules could exploit these patterns. For example:
 
@@ -209,12 +229,50 @@ We explored whether basic trading rules could exploit these patterns. For exampl
 
 We simulated a few of these strategies and compared them against an S&P 500 benchmark.
 
-📉 *Figure 2 — Strategy performance over time:*
+ *Figure 2 — Strategy performance over time:*
 
 ![Comparing Heuristic Trading Strategies](images/comparing_heuristic_strategies.png)
 
+## ML-Based Strategy Performance on Clinical Trial Results
 
-## 🚧 Future Directions
+To explore whether market reactions could be anticipated using structured features, I built a two-step modeling pipeline:
+
+1. **Outlier Prediction** – First, a classifier predicts whether a press release will trigger a large 30-day price move (≥10%).
+2. **Direction Prediction** – If flagged as an outlier, a second model forecasts whether the move will be **positive** or **negative**.
+
+Accordingly, the outputs of these models were treated as a tradeable signal:
+
+- **+1** → Buy and hold for 30 days  
+- **–1** → Short and hold for 30 days  
+- **0** → No trade
+
+This approach was tested separately on **positive** and **negative** trial result announcements:
+
+#### Positive Clinical Trial Results
+
+For “Positive” clinical trial outcomes, the model generated **368 trade signals**. However, the strategy underperformed the market:
+
+- **Average Strategy Return**: –1.49%  
+- **Average S&P 500 Return (same periods)**: +2.10%  
+- **Alpha**: –3.59%  
+- **Win Rate vs. SPY**: 45.4%
+
+Despite identifying some real movements, the model failed to consistently translate positive sentiment into profitable trades.
+
+
+#### Negative Clinical Trial Results
+
+For “Negative” announcements, the model generated far fewer trades — just **5 short signals** — but the results were compelling:
+
+- **Average Strategy Return**: +18.74%  
+- **Average S&P 500 Return (same periods)**: +1.02%  
+- **Alpha**: +17.72%  
+- **Win Rate vs. SPY**: 100.0%
+
+In this case, the model successfully identified a handful of negative press releases that preceded continued declines — offering short opportunities with strong follow-through. That said, the low number of trades suggests this result should be viewed as preliminary rather than conclusive.
+
+
+## Future Directions
 
 I'm no longer actively working on this project, but here are ideas if you want to build on it:
 
@@ -223,7 +281,7 @@ I'm no longer actively working on this project, but here are ideas if you want t
 - **Apply Beyond Biotech:** Framework could be adapted for sectors like medtech, fintech, etc.
 
 
-## 📬 Contact
+## Contact
 
 Want the data or curious to build on this?  
 Reach out: **hansenrjhan@gmail.com**
