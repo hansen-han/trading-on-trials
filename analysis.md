@@ -260,7 +260,7 @@ For “Positive” clinical trial outcomes, the model generated **368 trade sign
 - **Alpha**: –3.59%  
 - **Win Rate vs. SPY**: 45.4%
 
-Despite identifying some real movements, the model failed to consistently translate positive sentiment into profitable trades.
+Despite identifying some real movements, the model failed to consistently translate technical indicators and extracted text features into profitable trades.
 
 
 #### Negative Clinical Trial Results
@@ -272,17 +272,23 @@ For “Negative” announcements, the model generated far fewer trades — just 
 - **Alpha**: +17.72%  
 - **Win Rate vs. SPY**: 100.0%
 
-In this case, the model successfully identified a handful of negative press releases that preceded continued declines — offering short opportunities with strong follow-through. That said, the low number of trades suggests this result should be viewed as preliminary rather than conclusive.
+In this case, the model successfully identified a handful of negative press releases that preceded continued declines — offering short opportunities with strong follow-through. That said, the low number of trades suggests this result should be viewed as preliminary rather than conclusive. Additionally, the features behind the model were dominated by technical features. 
 
 See [**scripts/part_2__ml_trading_strategies.ipynb**](scripts/part_2__ml_trading_strategies.ipynb) for more in depth details like full ROC curves and classification reports.
 
 ## Future Directions
 
-I'm no longer actively working on this project, but here are ideas if you want to build on it:
+I'm no longer actively working on this project.
 
-- **RSS Integration:** Automate live press release tracking from company IR feeds
-- **Explore Other Release Types:** Partnerships & offerings had high volatility too
-- **Apply Beyond Biotech:** Framework could be adapted for sectors like medtech, fintech, etc.
+Ultimately, I didn’t find a strong enough signal to justify deeper development or any kind of potential trading strategy. While it was fascinating to explore how clinical trial results impact markets, the findings showed that even "positive" outcomes often resulted in mixed or negative price reactions — essentially a coin toss. Some contextual factors, like company size or regulatory framing, showed modest predictive value, but nothing consistent enough to act on confidently.
+
+That said, my curiosity is satisfied. This project gave me a clearer understanding of how nuanced and unpredictable investor behavior can be in biotech — and I found it especially rewarding to apply LLMs for structured text extraction. The ability to transform unstructured language into features that actually contributed meaningful signal — particularly in outlier prediction models — was one of the most surprising and interesting aspects of the project.
+
+These are some ideas I had about going further — threads I didn’t pull on but might be interesting for others to explore:
+
+- **RSS Integration**: Automate live press release tracking from company IR feeds for deployment
+- **Explore Other Release Types**: Partnerships & stock offerings had high volatility too, but I had only focused on clinical trial results, maybe there is signal lying deeper into these press releases? 
+- **Apply Beyond Biotech / Pharma**: Framework could be adapted for sectors like medtech, fintech, etc.
 
 
 ---
