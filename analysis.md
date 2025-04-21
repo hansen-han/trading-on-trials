@@ -236,10 +236,12 @@ We simulated a few of these strategies and compared them against an S&P 500 benc
 
 ## ML-Based Strategy Performance on Clinical Trial Results
 
-To explore whether market reactions could be anticipated using structured features, I built a two-step modeling pipeline:
+To explore whether market changes after a press release could be predicted (and capitalied on) using structured features, I built a two-step modeling pipeline:
 
 1. **Outlier Prediction** – First, a classifier predicts whether a press release will trigger a large 30-day price move (≥10%).
 2. **Direction Prediction** – If flagged as an outlier, a second model forecasts whether the move will be **positive** or **negative**.
+
+This is all done the day after the press release, taking into account the initial market response. Thus, all information in these cases would known and there would be need to try and anticipate a press release. 
 
 Accordingly, the outputs of these models were treated as a tradeable signal:
 
