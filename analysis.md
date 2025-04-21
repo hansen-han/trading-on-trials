@@ -271,6 +271,7 @@ For “Negative” announcements, the model generated far fewer trades — just 
 
 In this case, the model successfully identified a handful of negative press releases that preceded continued declines — offering short opportunities with strong follow-through. That said, the low number of trades suggests this result should be viewed as preliminary rather than conclusive.
 
+See [**scripts/part_2__ml_trading_strategies.ipynb**](scripts/part_2__ml_trading_strategies.ipynb) for more in depth details like full ROC curves and classification reports.
 
 ## Future Directions
 
