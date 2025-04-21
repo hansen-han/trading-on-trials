@@ -279,3 +279,14 @@ I'm no longer actively working on this project, but here are ideas if you want t
 - **RSS Integration:** Automate live press release tracking from company IR feeds
 - **Explore Other Release Types:** Partnerships & offerings had high volatility too
 - **Apply Beyond Biotech:** Framework could be adapted for sectors like medtech, fintech, etc.
+
+
+---
+> ⚠️ **Disclaimer**  
+> The information provided in this article is for educational and informational purposes only and should not be construed as financial or investment advice. The author and the publisher are not financial advisors or professionals and do not claim to be providing personalized financial advice.  
+> 
+> The content reflects the author's own research, analysis, and opinions, which are solely their own and do not represent or reflect the views of any current or former employer.  
+> 
+> The results discussed may not be applicable to individual circumstances. Before making any financial decisions or investments, readers should consult with a qualified financial advisor to consider their specific situation, goals, and risk tolerance.  
+> 
+> Past performance is not indicative of future results, and no representation or warranty is made regarding the accuracy or completeness of the information provided.
