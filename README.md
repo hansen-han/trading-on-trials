@@ -36,7 +36,7 @@ Reach out: **hansenrjhan@gmail.com**
 
 ---
 > ⚠️ **Disclaimer**  
-> The information provided in this article is for educational and informational purposes only and should not be construed as financial or investment advice. The author and the publisher are not financial advisors or professionals and do not claim to be providing personalized financial advice.  
+> The information provided in this repository is for educational and informational purposes only and should not be construed as financial or investment advice. The author and the publisher are not financial advisors or professionals and do not claim to be providing personalized financial advice.  
 > 
 > The content reflects the author's own research, analysis, and opinions, which are solely their own and do not represent or reflect the views of any current or former employer.  
 > 
