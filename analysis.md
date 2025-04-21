@@ -66,7 +66,7 @@ This project combines natural language processing and quantitative modeling to e
 
 ## Results
 
-### 📰 Press Release Categories and Volatility
+### Volatility by Press Release Type
 
 Press releases were grouped into 9 major categories such as:
 
@@ -76,9 +76,10 @@ Press releases were grouped into 9 major categories such as:
 - Executive Changes
 - Legal Disputes
 
-### Volatility by Press Release Type
+To understand which types of announcements drive the biggest market reactions, I calculated estimated stock price change for each press release. To avoid timing ambiguity — since it's often unclear whether a press release was issued before market open or after market close — I introduced a buffer period: the "pre-event" price is calculated as the average of the two trading days before the press release date. The "post-event" price is taken as the close of the day after the press release date.
 
-To understand which types of announcements drive the biggest market reactions, I calculated the **1-day stock price change** following each press release. The change is measured relative to the average of the **two days before the event**, which helps account for announcements released outside of trading hours.
+This buffer helps mitigate potential information leakage and better reflects how the market reacts once investors have had a chance to fully digest the news. It also reduces distortion from announcements released outside of regular trading hours, without requiring manual review of exact timestamps.
+
 
 Among all press release types:
 
@@ -86,7 +87,7 @@ Among all press release types:
 - **Partnerships and Licensing Agreements** also showed significant movement, suggesting investors pay close attention to these strategic events.
 - In contrast, more routine updates such as **executive changes**, **financials**, **conferences**, and **legal disputes** produced more muted market responses.
 
-📋 *Sample Summary (sorted by volatility):*
+*Sample Summary (sorted by volatility):*
 
 | Type                                              | Std Dev | Mean    | Median  | Min     | Max     | Count |
 |---------------------------------------------------|---------|---------|---------|---------|---------|--------|
